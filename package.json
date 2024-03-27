@@ -1,0 +1,27 @@
+{
+  "name": "google-maps",
+  "version": "1.0.0",
+  "description": "",
+  "main": "gmaps.js",
+  "type": "module",
+  "scripts": {
+    "start": "nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@aternus/csv-to-xlsx": "^2.1.5",
+    "@sparticuz/chromium": "^119.0.0",
+    "cheerio": "^1.0.0-rc.12",
+    "csv-parser": "^3.0.0",
+    "csv-writer": "^1.6.0",
+    "ejs": "^3.1.9",
+    "exceljs": "^4.4.0",
+    "express": "^4.19.2",
+    "path": "^0.12.7",
+    "puppeteer-extra": "^3.3.6",
+    "puppeteer-extra-plugin-stealth": "^2.11.2",
+    "xpath": "^0.0.33"
+  }
+}
