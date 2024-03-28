@@ -24,26 +24,21 @@ app.get('/', (req, res) => {
 });
 
 app.post('/search', async (req, res) => {
-    const { query, format } = req.body;
+    const { query } = req.body;
 
     try {
         const places = await scraper.searchGoogleMaps(query);
 
-        if (format === 'csv') {
-            // Generate CSV
-            res.attachment('query.csv');
-            res.sendFile(await exports.placesToCsv(places));
-        } else if (format === 'xlsx') {
-            // Generate Excel
-            res.attachment('places.xlsx');
-            res.sendFile(await exports.placesToExcel(places));
-        } else {
-            res.status(400).send('Invalid format');
-        }
+        res.attachment('places.xlsx');
+        res.sendFile(await exports.placesToExcel(places));
     } catch (error) {
         console.error('Error:', error);
         res.status(500).send('Internal Server Error');
     }
+});
+
+app.get('/template', (req, res) => {
+    res.sendFile('./exports/template.xlsm', { root: __dirname });
 });
 
 app.listen(port, () => {

@@ -131,4 +131,4 @@ dist
 
 misc/
 
-exports/places*
+exports/places.*

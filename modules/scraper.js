@@ -135,10 +135,6 @@ async function searchGoogleMaps(query) {
         category: firstOfLast?.text()?.split("·")?.[0]?.trim(),
         phone: lastOfLast?.text()?.split("·")?.[1]?.trim(),
         googleUrl: url,
-        bizWebsite: website,
-        ratingText,
-        stars,
-        numberOfReviews,
       });
     });
     const end = Date.now();

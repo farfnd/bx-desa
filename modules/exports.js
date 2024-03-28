@@ -27,10 +27,6 @@ async function placesToCsv(places) {
                     { id: 'category', title: 'Category' },
                     { id: 'phone', title: 'Phone' },
                     { id: 'googleUrl', title: 'Google URL' },
-                    { id: 'bizWebsite', title: 'Business Website' },
-                    { id: 'ratingText', title: 'Rating Text' },
-                    { id: 'stars', title: 'Stars' },
-                    { id: 'numberOfReviews', title: 'Number of Reviews' },
                 ],
             });
 

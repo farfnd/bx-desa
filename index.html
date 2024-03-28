@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mapping Industri Area Pondok Kelapa</title>
+    <title>Mapping Potensi Bisnis Area Pondok Kelapa</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
@@ -18,12 +18,22 @@
 
 <body>
     <div class="container mt-5">
-        <h1 class="mb-4">Mapping Industri Area Pondok Kelapa</h1>
+        <img src="mandiri-blue.png" alt="Logo Mandiri" class="mb-4" width="100px">
+        <h1 class="mb-4">Mapping Potensi Bisnis Area Pondok Kelapa</h1>
+        <p class="mb-3">
+            Aplikasi ini digunakan untuk mencari data industri di sekitar kantor cabang yang terletak dalam wilayah
+            Jakarta Pondok Kelapa. Silakan pilih jenis lokasi dan cabang yang diinginkan, lalu klik tombol "Download
+            Excel" untuk mengunduh data industri dalam format Excel.
+        </p>
+        <p class="mb-3">
+            Data yang telah diunduh dapat dimasukkan ke dalam template monitoring yang telah disediakan, untuk memantau
+            progres akuisisi tiap industri yang ada di sekitar kantor cabang.
+        </p>
         <form id="searchForm">
             <div class="mb-3">
-                <label for="type" class="form-label">Jenis:</label>
+                <label for="type" class="form-label">Jenis/sektor:</label>
                 <select class="form-select" id="type" name="type" required>
-                    <option selected default hidden label="- Silakan pilih jenis lokasi -"></option>
+                    <option selected default hidden label="- Silakan pilih jenis/sektor -"></option>
                     <option value="Sekolah">Sekolah</option>
                     <option value="Rumah Sakit">Rumah Sakit</option>
                     <option value="Restoran">Restoran</option>
@@ -54,16 +64,26 @@
             <div class="mb-3" id="radiusInput" style="display: none;">
                 <label for="radius" class="form-label">Radius:</label>
                 <div class="input-group">
-                    <input type="number" class="form-control" id="radius" name="radius" min="100">
+                    <input type="number" class="form-control" id="radius" name="radius" min="1" step="1">
                     <select class="form-select" id="radiusUnit">
                         <option value="m">meter</option>
                         <option value="km">kilometer</option>
                     </select>
                 </div>
             </div>
-            <button class="btn btn-outline-secondary" onclick="reset()" id="reset">Reset</button>
-            <button type="submit" class="btn btn-primary" id="csv" data-format="csv">Download CSV</button>
-            <button type="submit" class="btn btn-primary" id="xlsx" data-format="xlsx">Download Excel</button>
+            <div class="row">
+                <div class="col float-start">
+                    <button type="reset" class="btn btn-outline-secondary" onclick="reset()" id="reset">Reset</button>
+                    <button type="submit" class="btn btn-primary" id="xlsx" data-format="xlsx">Download Excel</button>
+                </div>
+                <div class="col">
+                    <a href="/template">
+                        <button type="button" class="btn btn-warning float-end" id="template">Download
+                            Template
+                            Monitoring</button>
+                    </a>
+                </div>
+            </div>
         </form>
     </div>
 
@@ -71,42 +91,28 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         // Function to reset download buttons
-        function resetButtons(csvButton, xlsxButton, unclickedButton) {
-            csvButton.disabled = false;
+        function resetButtons(xlsxButton) {
             xlsxButton.disabled = false;
-            csvButton.innerHTML = `Download CSV`;
             xlsxButton.innerHTML = `Download Excel`;
-            if (unclickedButton) {
-                unclickedButton.classList.remove('btn-secondary');
-                unclickedButton.classList.add('btn-primary');
-            }
         }
 
         // Function to reset form
         function reset() {
             document.getElementById('searchForm').reset();
             document.getElementById('radiusInput').style.display = 'none';
-            resetButtons(document.getElementById('csv'), document.getElementById('xlsx'));
+            resetButtons(document.getElementById('xlsx'));
         }
 
         document.getElementById('searchForm').addEventListener('submit', async function (event) {
             event.preventDefault();
 
             // Disable download buttons and show spinners
-            const csvButton = document.getElementById('csv');
             const xlsxButton = document.getElementById('xlsx');
             const resetButton = document.getElementById('reset');
-            csvButton.disabled = true;
             xlsxButton.disabled = true;
             resetButton.disabled = true;
 
-            const clickedButton = event.submitter;
-            clickedButton.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> ${clickedButton.textContent}`;
-
-            let format = clickedButton.id;
-            let unclickedButton = format === 'csv' ? xlsxButton : csvButton;
-            unclickedButton.classList.remove('btn-primary');
-            unclickedButton.classList.add('btn-secondary');
+            xlsxButton.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Downloading...`;
 
             const type = document.getElementById('type').value;
             const branch = document.getElementById('branch').value;
@@ -125,7 +131,7 @@
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ query, format })
+                    body: JSON.stringify({ query })
                 });
 
                 if (response.ok) {
@@ -137,7 +143,7 @@
                     if (radius) {
                         filename += `-${radius}${radiusUnit}`;
                     }
-                    a.download = `${filename}.${format}`;
+                    a.download = `${filename}.xlsx`;
                     document.body.appendChild(a);
                     a.click();
                     window.URL.revokeObjectURL(url);
@@ -149,7 +155,7 @@
                 alert('Internal Server Error. Please try again later.');
             } finally {
                 // Reset download buttons
-                resetButtons(csvButton, xlsxButton, unclickedButton);
+                resetButtons(xlsxButton);
             }
         });
 
@@ -159,4 +165,5 @@
         });
     </script>
 </body>
+
 </html>
